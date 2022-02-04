@@ -19,6 +19,7 @@ mais simples para a comunidade em geral.
 
 ```
 npm install
+```
 npm start
 ```
 - A database utilizada, juntamente com todos os scripts necessários de banco, está no caminho:
