@@ -7,8 +7,8 @@ let operations = {
     findById: function(id) {
         return pool.promise().query('select * from autores where id=?', [id])
     },
-    findByNome: function(nome) {
-        return pool.promise().query('select * from autores where nome=?', [nome])
+    findByUsername: function(username) {
+        return pool.promise().query('select * from autores where nome=?', [username])
     },
     save: function(autor) {
         return pool.promise().execute('INSERT INTO autores (nome, email, area, password) VALUES (?, ?, ?, ?)', [autor.nome, autor.email, autor.area, autor.password])

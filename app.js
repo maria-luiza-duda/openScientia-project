@@ -11,8 +11,9 @@ var usersRouter = require('./routes/users');
 var autoresRouter = require('./routes/autores');
 var loginRouter = require('./routes/login');
 
+
+
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy
 
 var app = express();
 
@@ -23,10 +24,10 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser('secret'));
+app.use(cookieParser());
 app.use(session({
   secret: 'secret',
-  cookie: {maxAge: 60000},
+  cookie: {maxAge: 2 * 60 *1000},
   resave: false,
   saveUninitialized: false
 }))
@@ -37,45 +38,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize())
 app.use(passport.session())
 
-let dao = require('./database/dao')
-
-passport.serializeUser( function(autor, done){
-  done(null, autor.id)
-})
-
-passport.deserializeUser(function(id, done){
-  dao.findById(id)
-  .then(([rows])=>{
-    let autor = rows[0]
-    return done(null, autor)
-  }).catch(err => {
-    return done(err, null)
-  })
-})
-
-let strategyConfig = {
-  nomeField: 'nome',
-  passwordField: 'password'
+let middlewareAutorization = function(req, res, next){
+  if (req.isAuthenticated()) return next ()
+  else res.redirect('/login')
 }
-
-passport.use(new LocalStrategy(strategyConfig, function(nome, password, done){
-  dao.findByNome(nome)
-  .then(([rows])=>{
-    if (rows.length == 0) return done(null, false)
-
-    let autor = rows[0]
-    if (autor.password != password) return done(null, false)
-    else return done(null, autor)
-  }).catch( err => {
-    console.log(err)
-    return done(err, null)
-  })
-}))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/autores', autoresRouter);
+app.use('/autores', middlewareAutorization ,autoresRouter);
 app.use('/login', loginRouter)
+
+require('./services/auth')(passport)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
