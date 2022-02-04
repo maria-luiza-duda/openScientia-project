@@ -31,4 +31,21 @@ npm start
 
 ### Principais rotas
 
+- Rota de login para autores cadastrados
+```
+/login
+```
+- Rota principal. Lista de todos os autores cadastrados.
+```
+/autores
+```
+- Rota de cadastro de autores.
+```
+/autores/form
+```
+- Rota de edição de autores.
+```
+/autores/form?id=1
+```
+
 
