@@ -27,5 +27,8 @@ npm start
 
 ```
 /database/bd_openScientia.sql
+```
+
+### Principais rotas
 
 

@@ -6,12 +6,8 @@ var logger = require('morgan');
 var flash = require('express-flash')
 var session = require('express-session')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var autoresRouter = require('./routes/autores');
 var loginRouter = require('./routes/login');
-
-
 
 const passport = require('passport');
 
@@ -43,8 +39,6 @@ let middlewareAutorization = function(req, res, next){
   else res.redirect('/login')
 }
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/autores', middlewareAutorization ,autoresRouter);
 app.use('/login', loginRouter)
 
